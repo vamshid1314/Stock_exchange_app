@@ -1,0 +1,41 @@
+# Flutter/Dart/Pub related
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+.metadata
+build/
+
+# IntelliJ/Android Studio related
+.idea/
+*.iml
+
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# Android build outputs
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# iOS build outputs (optional but recommended)
+/ios/Flutter/Flutter.framework/
+/ios/Flutter/Flutter.podspec
+Pods/
+DerivedData/
+
+# VS Code (uncomment if you want to track VS Code configs)
+# .vscode/
