@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stock_exchange_app/home/views/home_screen.dart';
+import 'package:stock_exchange_app/login/log_in_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -33,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen>
     _controller.addStatusListener((status){
       if(status == AnimationStatus.completed){
         Future.delayed(const Duration(milliseconds: 1000),(){
-          Navigator.of(context).pushReplacement(HomeScreen.route());
+          Navigator.of(context).pushReplacement(LoginScreen.route());
         });
       }
     });
