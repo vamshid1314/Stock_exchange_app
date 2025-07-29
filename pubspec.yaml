@@ -68,6 +68,8 @@ flutter:
   assets:
      - assets/images/splash_image.avif
      - assets/images/symbol1.png
+     - assets/images/stock.png
+     - assets/images/vamshi.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

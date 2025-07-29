@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:stock_exchange_app/home/views/home_screen.dart';
 import 'package:stock_exchange_app/login/log_in_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -37,10 +36,6 @@ class _SplashScreenState extends State<SplashScreen>
           Navigator.of(context).pushReplacement(LoginScreen.route());
         });
       }
-    });
-
-    Future.delayed(const Duration(seconds: 3), (){
-      Navigator.of(context).push(HomeScreen.route());
     });
   }
 

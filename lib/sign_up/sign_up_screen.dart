@@ -41,7 +41,9 @@ class SignUpScreen extends StatelessWidget {
               const SizedBox(height: 50),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).push(HomeScreen.route());
+                  Navigator.of(
+                    context,
+                  ).pushAndRemoveUntil(HomeScreen.route(), (route) => false);
                 },
                 child: const Text('Sign Up'),
               ),
