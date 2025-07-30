@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:stock_exchange_app/home/dummy%20data/stocks_data.dart';
 import 'package:stock_exchange_app/home/widgets/indices_card.dart';
 import 'package:stock_exchange_app/home/widgets/top_navigation_option.dart';
 
@@ -16,7 +18,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   int selectedIndex = 0;
   final List<String> options = ['Explore', 'Holdings', 'Positions', 'Orders'];
 
@@ -68,13 +69,20 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildIndices(),
-            const SizedBox(height: 40),
-            _buildTopNavigation(context,options),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 10),
+              _buildIndices(),
+              const SizedBox(height: 30),
+              _buildTopNavigation(context, options),
+              const SizedBox(height: 15),
+              if(selectedIndex == 0)
+                Expanded(child: _buildStocksGrid())
+            ],
+          ),
         ),
       ),
     );
@@ -82,13 +90,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildIndices() {
     return SizedBox(
-      height: 80,
+      height: 70,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: stockIndices.length,
         itemBuilder: (context, index) {
           final stock = stockIndices[index];
-          return SizedBox(width: 225, child: IndicesCard(stock: stock));
+          return  IndicesCard(stock: stock);
         },
       ),
     );
@@ -96,19 +104,107 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildTopNavigation(BuildContext context, List options) {
     return Row(
-      children: List.generate(options.length, (index){
+      children: List.generate(options.length, (index) {
         return Expanded(
-            child: TopNavigationOption(
-                option: options[index],
-              isSelected: selectedIndex == index,
-              onTap: () {
-                  setState(() {
-                    selectedIndex = index;
-                  });
-              },
-            )
+          child: TopNavigationOption(
+            option: options[index],
+            isSelected: selectedIndex == index,
+            onTap: () {
+              setState(() {
+                selectedIndex = index;
+              });
+            },
+          ),
         );
-      })
+      }),
+    );
+  }
+
+  Widget _buildStocksGrid(){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Most bought on Stoxie',
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+        const SizedBox(height: 15),
+        Expanded(
+          child: GridView.builder(
+            itemCount: stocksData.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+            ),
+            itemBuilder: (context, index) {
+              final stock = stocksData[index];
+              bool changeVal = stock['changeValue'] >= 0;
+              return Card(
+                elevation: 2,
+                margin: const EdgeInsets.all(8),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: CachedNetworkImage(
+                          imageUrl: stock['imageUrl'],
+                          height: 35,
+                          width: 35,
+                          placeholder: (context, url) => const SizedBox(
+                            height: 35,
+                            width: 35,
+                            child: Center(
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) => const SizedBox(
+                            height: 35,
+                            width: 35,
+                            child: Icon(Icons.broken_image, color: Colors.red),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        stock['name'],
+                        style: Theme.of(context).textTheme.bodySmall,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const Spacer(),
+                      Text(
+                        '₹${stock['price']}',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      Row(
+                        children: [
+                          if(changeVal)
+                            const Text(
+                              '+',
+                              style:TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.green
+                              ),
+                            ),
+                          Text(
+                            '${stock['changeValue']}(${stock['changePercent']}%)',
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: changeVal ? Colors.green : Colors.red
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

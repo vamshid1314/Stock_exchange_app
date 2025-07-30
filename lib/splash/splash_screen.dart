@@ -17,7 +17,6 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     _controller = AnimationController(
@@ -93,7 +92,7 @@ class _SplashScreenState extends State<SplashScreen>
                   children: [
                     const Spacer(),
                     const Text(
-                      'True Broker',
+                      'Stoxie',
                       style: TextStyle(
                         fontFamily: 'MW',
                         color: Colors.amberAccent,

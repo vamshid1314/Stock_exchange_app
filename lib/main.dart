@@ -44,9 +44,9 @@ class MyApp extends StatelessWidget {
             color: Color(0xFF7F00FF),
           ),
           headlineMedium: TextStyle(
-            fontSize: 24,
+            fontSize: 23,
             fontWeight: FontWeight.w600,
-            color: Color(0xFFD946EF),
+            color: Colors.black,
           ),
           headlineSmall: TextStyle(
             fontSize: 20,
@@ -60,12 +60,17 @@ class MyApp extends StatelessWidget {
           ),
           bodyLarge: TextStyle(
             fontSize: 16,
-            fontWeight: FontWeight.normal,
-            color: Colors.white,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
           ),
           bodyMedium: TextStyle(
             fontSize: 14,
-            color: Colors.black54,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+          bodySmall: TextStyle(
+            fontSize: 15,
+            color: Colors.black,
           ),
           labelLarge: TextStyle(
             fontSize: 16,
@@ -107,11 +112,11 @@ class MyApp extends StatelessWidget {
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
-            side: BorderSide(width: 2, color: Colors.grey[400]!),
+            side: BorderSide(width: 1.5, color: Colors.grey[300]!),
           ),
         ),
       ),
-      title: 'Stock Broker',
+      title: 'Stoxie',
       home: const SplashScreen(),
     );
   }
