@@ -92,7 +92,7 @@ class _SplashScreenState extends State<SplashScreen>
                   children: [
                     const Spacer(),
                     const Text(
-                      'Stoxie',
+                      'Trademint',
                       style: TextStyle(
                         fontFamily: 'MW',
                         color: Colors.amberAccent,

@@ -12,8 +12,7 @@ class IndicesCard extends StatelessWidget {
     return Center(
       child: Card(
         child: Container(
-          width: 190,
-          height: 60,
+          width: 200,
           padding: const EdgeInsets.all(8),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

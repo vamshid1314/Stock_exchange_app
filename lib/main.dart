@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:stock_exchange_app/home/views/home_screen.dart';
 import 'package:stock_exchange_app/splash/splash_screen.dart';
+
+import 'home/views/home_screen_slivers.dart';
 
 void main() {
   runApp(const MyApp());
@@ -116,8 +117,8 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      title: 'Stoxie',
-      home: const SplashScreen(),
+      title: 'Trademint',
+      home: const HomeScreenSilvers(),
     );
   }
 }
