@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:stock_exchange_app/home/dummy%20data/top_movers.dart';
-
+import 'package:stock_exchange_app/home/widgets/grid_card_builder.dart';
 import '../dummy data/stock_indices.dart';
 import '../dummy data/stocks_data.dart';
+import '../dummy data/top_gainers.dart';
+import '../dummy data/top_losers.dart';
 import '../widgets/indices_card.dart';
 import '../widgets/top_navigation_option.dart';
 
@@ -17,6 +18,7 @@ class HomeScreenSilvers extends StatefulWidget {
 class _HomeScreenSilversState extends State<HomeScreenSilvers> {
   int selectedIndex = 0;
   final List<String> options = ['Explore', 'Holdings', 'Positions', 'Orders'];
+  String selectedChip = 'Gainers';
 
   @override
   Widget build(BuildContext context) {
@@ -111,17 +113,14 @@ class _HomeScreenSilversState extends State<HomeScreenSilvers> {
                 ),
               ),
             ),
-            const SliverToBoxAdapter(
+            SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.only(top: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Icon(Icons.book_online, size: 40),
-                    Icon(Icons.book_online, size: 40),
-                    Icon(Icons.book_online, size: 40),
-                    Icon(Icons.book_online, size: 40),
-                    Icon(Icons.book_online, size: 40),
+                    _buildToolIcon('IPO', 'assets/images/IPO.png', () {}),
+                    _buildToolIcon('Bonds', 'assets/images/bond.png', () {}),
                   ],
                 ),
               ),
@@ -129,94 +128,21 @@ class _HomeScreenSilversState extends State<HomeScreenSilvers> {
 
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.only(top: 40, left: 10,bottom: 20),
-                child: Text(
-                  'Top movers today',
-                  style: Theme.of(context).textTheme.headlineMedium,
+                padding: const EdgeInsets.only(top: 40, left: 10, bottom: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Top movers today',
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    const SizedBox(height: 10),
+                    _buildChips(),
+                  ],
                 ),
               ),
             ),
-            SliverGrid(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                final stock = topMovers[index];
-                bool changeVal = stock['changeValue'] >= 0;
-                return Card(
-                  elevation: 2,
-                  margin: const EdgeInsets.all(8),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10,
-                      horizontal: 15,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: CachedNetworkImage(
-                            imageUrl: stock['imageUrl'],
-                            height: 35,
-                            width: 35,
-                            placeholder: (context, url) => const SizedBox(
-                              height: 35,
-                              width: 35,
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              ),
-                            ),
-                            errorWidget: (context, url, error) =>
-                                const SizedBox(
-                                  height: 35,
-                                  width: 35,
-                                  child: Icon(
-                                    Icons.broken_image,
-                                    color: Colors.red,
-                                  ),
-                                ),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          stock['name'],
-                          style: Theme.of(context).textTheme.bodySmall,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const Spacer(),
-                        Text(
-                          '₹${stock['price']}',
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
-                        Row(
-                          children: [
-                            if (changeVal)
-                              const Text(
-                                '+',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.green,
-                                ),
-                              ),
-                            Text(
-                              '${stock['changeValue']}(${stock['changePercent']}%)',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: changeVal ? Colors.green : Colors.red,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }, childCount: stocksData.length),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-              ),
-            ),
+            _buildTopMoversGrid(selectedChip),
           ],
           const SliverFillRemaining(),
         ],
@@ -235,6 +161,52 @@ class _HomeScreenSilversState extends State<HomeScreenSilvers> {
           return IndicesCard(stock: stock);
         },
       ),
+    );
+  }
+
+  Row _buildChips() {
+    return Row(
+      children: [
+        ActionChip(
+          label: const Text('Gainers', style: TextStyle(fontSize: 14)),
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 0),
+          // Less padding
+          visualDensity: VisualDensity.compact,
+          onPressed: () {
+            setState(() {
+              selectedChip = 'Gainers';
+            });
+          },
+          backgroundColor: selectedChip == 'Gainers' ? Colors.grey[300] : null,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(40),
+            side: BorderSide(
+              color: selectedChip == 'Gainers' ? Colors.grey : Colors.black,
+              width: selectedChip == 'Gainers' ? 2 : 1,
+            ),
+          ),
+        ),
+        const SizedBox(width: 10),
+        ActionChip(
+          label: const Text('Losers', style: TextStyle(fontSize: 14)),
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 0),
+          // Less padding
+          visualDensity: VisualDensity.compact,
+          onPressed: () {
+            setState(() {
+              selectedChip = 'Losers';
+            });
+          },
+          backgroundColor: selectedChip == 'Losers' ? Colors.grey[300] : null,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(40),
+            side: BorderSide(
+              color: selectedChip == 'Losers' ? Colors.grey : Colors.black,
+              width: selectedChip == 'Losers' ? 2 : 1,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -261,70 +233,43 @@ class _HomeScreenSilversState extends State<HomeScreenSilvers> {
       delegate: SliverChildBuilderDelegate((context, index) {
         final stock = stocksData[index];
         bool changeVal = stock['changeValue'] >= 0;
-        return Card(
-          elevation: 2,
-          margin: const EdgeInsets.all(8),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: CachedNetworkImage(
-                    imageUrl: stock['imageUrl'],
-                    height: 35,
-                    width: 35,
-                    placeholder: (context, url) => const SizedBox(
-                      height: 35,
-                      width: 35,
-                      child: Center(
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
-                    ),
-                    errorWidget: (context, url, error) => const SizedBox(
-                      height: 35,
-                      width: 35,
-                      child: Icon(Icons.broken_image, color: Colors.red),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  stock['name'],
-                  style: Theme.of(context).textTheme.bodySmall,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const Spacer(),
-                Text(
-                  '₹${stock['price']}',
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                Row(
-                  children: [
-                    if (changeVal)
-                      const Text(
-                        '+',
-                        style: TextStyle(fontSize: 13, color: Colors.green),
-                      ),
-                    Text(
-                      '${stock['changeValue']}(${stock['changePercent']}%)',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: changeVal ? Colors.green : Colors.red,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
+        return GridCardBuilder(stock: stock, changeVal: changeVal);
       }, childCount: stocksData.length),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
       ),
+    );
+  }
+
+  SliverGrid _buildTopMoversGrid(String selectedChip) {
+    return SliverGrid(
+      delegate: SliverChildBuilderDelegate((context, index) {
+        final stock = selectedChip == 'Gainers'
+            ? gainers[index]
+            : losers[index];
+        bool changeVal = stock['changeValue'] >= 0;
+        return  GridCardBuilder(
+          stock: stock,
+          changeVal: changeVal,
+        );
+      },
+          childCount: selectedChip == 'Gainers' ? gainers.length : losers.length,
+      ),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+      ),
+    );
+  }
+
+  Column _buildToolIcon(String text, String imageUrl, VoidCallback onTap) {
+    return Column(
+      children: [
+        IconButton(
+          onPressed: onTap,
+          icon: ImageIcon(AssetImage(imageUrl), size: 40, color: Colors.blue),
+        ),
+        Text(text),
+      ],
     );
   }
 }
