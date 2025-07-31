@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:stock_exchange_app/home/widgets/grid_card_builder.dart';
 import '../dummy data/stock_indices.dart';
 import '../dummy data/stocks_data.dart';
+import '../dummy data/stocks_in_news.dart';
 import '../dummy data/top_gainers.dart';
 import '../dummy data/top_losers.dart';
 import '../widgets/indices_card.dart';
@@ -103,7 +104,7 @@ class _HomeScreenSilversState extends State<HomeScreenSilvers> {
                 ),
               ),
             ),
-            _buildStocksSliverGrid(),
+            _buildStocksSliverGrid(whichStock: 'Most bought'),
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.only(top: 40, left: 10, bottom: 25),
@@ -143,8 +144,24 @@ class _HomeScreenSilversState extends State<HomeScreenSilvers> {
               ),
             ),
             _buildTopMoversGrid(selectedChip),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 40, left: 10, bottom: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Stocks in news',
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ),
+            ),
+            _buildStocksSliverGrid(whichStock: 'Stocks in news'),
+            const SliverToBoxAdapter(child: SizedBox(height: 70)),
           ],
-          const SliverFillRemaining(),
         ],
       ),
     );
@@ -228,10 +245,10 @@ class _HomeScreenSilversState extends State<HomeScreenSilvers> {
     );
   }
 
-  SliverGrid _buildStocksSliverGrid() {
+  SliverGrid _buildStocksSliverGrid({required String whichStock}) {
     return SliverGrid(
       delegate: SliverChildBuilderDelegate((context, index) {
-        final stock = stocksData[index];
+        final stock = whichStock == 'Most bought' ? stocksData[index] : stocksInNews[index];
         bool changeVal = stock['changeValue'] >= 0;
         return GridCardBuilder(stock: stock, changeVal: changeVal);
       }, childCount: stocksData.length),
